@@ -1,0 +1,10 @@
+const express = require("express");
+const { getAllBooks, getBookById, createBook, updateBook, deleteBook } = require("../controllers/book.controller");
+const validateBook = require("../middleware/validation.middleware");
+const router = express.Router();
+router.get("/", getAllBooks);
+router.get("/:id", getBookById);
+router.post("/", validateBook, createBook);
+router.put("/:id", validateBook, updateBook);
+router.delete("/:id", deleteBook);
+module.exports = router;
