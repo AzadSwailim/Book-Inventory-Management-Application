@@ -17,22 +17,37 @@ const createBook = async (bookData) => {
     });
 };
 
-const updateBook = (id, updatedData) => {
-    const book = books.find(book => book.id === id);
-    if (!book) {
-        return null;
-    }
-    Object.assign(book, updatedData);
-    return book;
+const updateBook = async (id, updatedData) =>{
+    const book = await prisma.book.findUnique({
+        where: {
+            id
+        }
+    });
+    if (!book){
+        return null
+    };
+    return await prisma.book.update({
+        where: {
+            id
+        },
+        data: updatedData
+    });
 };
 
-const deleteBook = (id) => {
-    const index = books.findIndex(book => book.id === id);
-    if (index === -1) {
-        return false;
-    }
-    books.splice(index, 1);
-    return true;
+const deleteBook = async (id) => {
+    const book = await prisma.book.findUnique({
+        where: {
+            id
+        }
+    });
+    if (!book){
+        return null
+    };
+    return await prisma.book.delete({
+        where:{
+            id
+        }
+    });
 };
 
 module.exports = {

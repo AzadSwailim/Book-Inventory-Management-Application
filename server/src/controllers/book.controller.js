@@ -26,9 +26,9 @@ const createBook = async (req, res) => {
     return res.status(201).json(newBook);
 };
 
-const updateBook = (req, res) => {
+const updateBook = async (req, res) => {
     const id = parseInt(req.params.id);
-    const updatedBook = bookService.updateBook(id, req.body);
+    const updatedBook = await bookService.updateBook(id, req.body);
     if (!updatedBook) {
         return res.status(404).json({
             message: "Book Not Found"
@@ -37,10 +37,10 @@ const updateBook = (req, res) => {
     return res.json(updatedBook);
 };
 
-const deleteBook = (req, res) => {
+const deleteBook = async (req, res) => {
     const id = parseInt(req.params.id);
-    const deleted = bookService.deleteBook(id);
-    if (!deleted) {
+    const deletedBook = await bookService.deleteBook(id);
+    if (!deletedBook) {
         return res.status(404).json({
             message: "Book Not Found"
         });
