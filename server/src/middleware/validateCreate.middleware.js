@@ -1,4 +1,4 @@
-const validateBook = (req, res, next) => {
+const validateCreate = (req, res, next) => {
     const { title } = req.body;
     const price = Number(req.body.price);
     const stock = Number(req.body.stock);
@@ -21,4 +21,4 @@ const validateBook = (req, res, next) => {
     req.body.stock = stock;
     next();
 };
-module.exports = validateBook;
+module.exports = validateCreate;

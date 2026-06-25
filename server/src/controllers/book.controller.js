@@ -1,7 +1,10 @@
 const bookService = require("../services/book.service");
 
 const getAllBooks = async (req, res) => {
-    const books = await bookService.getAllBooks();
+    const { search, sort="id", order="asc" } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const books = await bookService.getAllBooks(search, page, limit, sort, order);
     return res.json(books);
 };
 

@@ -1,6 +1,23 @@
 const prisma = require ("../config/prisma");
-const getAllBooks = async () => {
-    return await prisma.book.findMany();
+
+const getAllBooks = async (search, page, limit, sort, order) => {
+    let where = {};
+    if (search){
+        where = {
+            title: {
+                contains: search,
+                mode: "insensitive"
+            }
+        }
+    }
+    return prisma.book.findMany({
+        where,
+        orderBy: {
+            [sort]: order
+        },
+        skip: (page-1)*limit,
+        take: limit
+    });
 };
 
 const getBookById = async (id) => {

@@ -1,11 +1,12 @@
 const express = require ("express");
 const app = express();
 const logger = require("./middleware/logger.middleware");
-const validateBook = require("./middleware/validation.middleware");
 const bookRoutes = require("./routes/book.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 const errorHandler = require("./middleware/error.middleware");
 app.use(express.json());
 app.use(logger);
 app.use("/books", bookRoutes);
+app.use("/dashboard", dashboardRoutes);
 app.use(errorHandler);
 module.exports = app;
