@@ -1,4 +1,4 @@
-const bookService = require("../services/book.service");
+const bookService = require("../services/book.services");
 
 const getAllBooks = async (req, res) => {
     const { search, sort="id", order="asc" } = req.query;

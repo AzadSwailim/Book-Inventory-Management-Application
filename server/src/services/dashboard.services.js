@@ -1,3 +1,4 @@
+const prisma = require("../config/prisma");
 const getDashboard = async () => {
     const totalBooks = await prisma.book.count();
     const totalStock = await prisma.book.aggregate({

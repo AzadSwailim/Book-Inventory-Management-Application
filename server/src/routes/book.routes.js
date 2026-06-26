@@ -6,11 +6,13 @@ const { getAllBooks,
         deleteBook 
       } = require("../controllers/book.controller");
 const validateCreate = require("../middleware/validateCreate.middleware");
-const validateUpdate = require("../middleware/ValidateUpdate.middileware");
-const asyncHandler = require("../utils/asyncHandler");const router = express.Router();
+const authMiddleware = require("../middleware/auth.middleware");
+const validateUpdate = require("../middleware/ValidateUpdate.middleware");
+const asyncHandler = require("../utils/asyncHandler");
+const router = express.Router();
 router.get("/", asyncHandler(getAllBooks));
 router.get("/:id", asyncHandler(getBookById));
-router.post("/", validateCreate, asyncHandler(createBook));
-router.put("/:id", validateUpdate, asyncHandler(updateBook));
-router.delete("/:id", asyncHandler(deleteBook));
+router.post("/", authMiddleware, validateCreate, asyncHandler(createBook));
+router.put("/:id", authMiddleware, validateUpdate, asyncHandler(updateBook));
+router.delete("/:id", authMiddleware, asyncHandler(deleteBook));
 module.exports = router;
