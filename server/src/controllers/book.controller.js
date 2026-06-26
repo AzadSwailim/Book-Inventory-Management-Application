@@ -21,17 +21,25 @@ const getBookById = async (req, res) => {
 
 const createBook = async (req, res) => {
     const { title, price, stock } = req.body;
+    const coverImage = req.file ? req.file.path: null;
     const newBook = await bookService.createBook({
         title,
         price,
-        stock
+        stock,
+        coverImage
     });
     return res.status(201).json(newBook);
 };
 
 const updateBook = async (req, res) => {
     const id = parseInt(req.params.id);
-    const updatedBook = await bookService.updateBook(id, req.body);
+    const updatedData = {
+        ...req.body
+    };
+    if (req.file) {
+        updatedData.coverImage = req.file.path;
+    }
+    const updatedBook = await bookService.updateBook(id, updatedData);
     if (!updatedBook) {
         return res.status(404).json({
             message: "Book Not Found"

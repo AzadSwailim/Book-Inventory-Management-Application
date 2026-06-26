@@ -7,7 +7,7 @@ const validateCreate = (req, res, next) => {
             message: "Title Required"
         });
     }
-    if (Number.isNaN(price) || price < 0) {
+    if (Number.isNaN(price) || price <= 0) {
         return res.status(400).json({
             message: "Invalid Price"
         });

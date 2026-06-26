@@ -6,6 +6,7 @@ const dashboardRoutes = require("./routes/dashboard.routes");
 const authRoutes = require("./routes/auth.routes");
 const errorHandler = require("./middleware/error.middleware");
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 app.use(logger);
 app.use("/books", bookRoutes);
 app.use("/dashboard", dashboardRoutes);

@@ -25,3 +25,6 @@ const getDashboard = async () => {
         lowStock
     };
 };
+module.exports = {
+    getDashboard
+};

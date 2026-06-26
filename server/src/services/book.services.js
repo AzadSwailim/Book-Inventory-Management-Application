@@ -1,4 +1,5 @@
 const prisma = require ("../config/prisma");
+const fs = require("fs/promises");
 
 const getAllBooks = async (search, page, limit, sort, order) => {
     let where = {};
@@ -6,7 +7,6 @@ const getAllBooks = async (search, page, limit, sort, order) => {
         where = {
             title: {
                 contains: search,
-                mode: "insensitive"
             }
         }
     }
@@ -43,6 +43,15 @@ const updateBook = async (id, updatedData) =>{
     if (!book){
         return null
     };
+    if (updatedData.coverImage) {
+        if (book.coverImage) {
+            try {
+                await fs.unlink(book.coverImage);
+            } catch (err) {
+                console.log("Image not found:", err.message);
+            }
+        }
+    }
     return await prisma.book.update({
         where: {
             id
@@ -60,6 +69,13 @@ const deleteBook = async (id) => {
     if (!book){
         return null
     };
+    if (book.coverImage) {
+        try {
+            await fs.unlink(book.coverImage);
+        } catch (err) {
+            console.log("Image not found:", err.message);
+        }
+    }
     return await prisma.book.delete({
         where:{
             id
