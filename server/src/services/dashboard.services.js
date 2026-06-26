@@ -14,7 +14,7 @@ const getDashboard = async () => {
     const lowStock = await prisma.book.count({
         where: {
             stock: {
-                lt: 10
+                lt: 25
             }
         }
     });

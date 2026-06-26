@@ -1,0 +1,78 @@
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.settings-panel {
+    display: grid;
+    align-content: start;
+    gap: 22px;
+}
+
+.settings-panel-header {
+    display: flex;
+    gap: 14px;
+}
+
+.settings-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: var(--gold-soft);
+    color: var(--walnut);
+}
+
+.settings-icon.emerald {
+    background: rgba(5, 150, 105, 0.14);
+    color: var(--emerald);
+}
+
+.settings-panel h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.settings-panel p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.theme-segment {
+    width: fit-content;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.theme-segment span {
+    min-height: 36px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    font-weight: 800;
+    transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.theme-segment span.active {
+    background: var(--surface-solid);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 760px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+}

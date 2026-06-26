@@ -1,0 +1,138 @@
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+}
+
+.app-main {
+    min-width: 0;
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    transition: margin-left 220ms ease;
+}
+
+.Sidebar:hover + .app-main {
+    margin-left: var(--sidebar-expanded-width);
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 30px;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 94%, var(--surface-solid));
+}
+
+.navbar-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.navbar-title h1 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 850;
+    letter-spacing: 0;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-field {
+    width: min(280px, 28vw);
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-solid);
+    color: var(--text-muted);
+    padding: 0 13px;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.search-field:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.search-field input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.admin-profile {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-solid);
+    padding: 0 13px;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.page-content {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 32px 0 52px;
+}
+
+.mobile-menu-button {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .app-main {
+        margin-left: 0;
+    }
+
+    .Sidebar:hover + .app-main {
+        margin-left: 0;
+    }
+
+    .mobile-menu-button {
+        display: inline-flex;
+    }
+
+    .navbar {
+        padding: 12px 16px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .navbar-actions {
+        width: 100%;
+    }
+
+    .search-field {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .admin-profile span {
+        display: none;
+    }
+
+    .page-content {
+        width: min(100% - 24px, 1180px);
+        padding-top: 18px;
+    }
+}

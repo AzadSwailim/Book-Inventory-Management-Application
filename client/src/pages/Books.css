@@ -1,0 +1,260 @@
+.books-heading {
+    align-items: center;
+}
+
+.filters-bar {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    padding: 14px 16px;
+}
+
+.filters-bar label {
+    display: grid;
+    gap: 7px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.filters-bar select {
+    width: 176px;
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    padding: 0 12px;
+    outline: 0;
+    cursor: pointer;
+}
+
+.filters-bar select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.clear-filters {
+    min-height: 40px;
+}
+
+.table-card {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+}
+
+.books-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+.books-table th,
+.books-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+.books-table th {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.books-table tbody tr {
+    transition: background 160ms ease;
+}
+
+.books-table tbody tr:hover {
+    background: color-mix(in srgb, var(--surface-muted) 58%, transparent);
+}
+
+.books-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.cover-thumb {
+    width: 48px;
+    height: 64px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.cover-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-title-cell {
+    min-width: 220px;
+    font-weight: 850;
+}
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.sell-icon:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.sell-modal {
+    width: min(440px, 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: color-mix(in srgb, var(--surface-solid) 88%, transparent);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+    backdrop-filter: blur(18px);
+    animation: rise-in 180ms ease;
+}
+
+.sell-modal h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.sell-stock-summary {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+}
+
+.sell-stock-summary span,
+.sell-field span {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sell-stock-summary strong {
+    font-size: 28px;
+    color: var(--text-primary);
+}
+
+.sell-field {
+    display: grid;
+    gap: 8px;
+}
+
+.sell-field input {
+    min-height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    padding: 0 14px;
+    outline: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.sell-field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.table-state {
+    padding: 30px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination-button,
+.pagination-page {
+    min-height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-solid);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 800;
+    transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+}
+
+.pagination-button {
+    padding: 0 12px;
+}
+
+.pagination-page {
+    width: 38px;
+}
+
+.pagination-button:hover:not(:disabled),
+.pagination-page:hover,
+.pagination-page.active {
+    border-color: color-mix(in srgb, var(--gold) 60%, var(--border));
+    background: var(--gold-soft);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+@media (max-width: 620px) {
+    .books-heading {
+        align-items: flex-start;
+    }
+
+    .filters-bar label,
+    .filters-bar select,
+    .clear-filters {
+        width: 100%;
+    }
+
+    .pagination {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pagination-pages {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
