@@ -6,7 +6,15 @@ const bookRoutes = require("./routes/book.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const authRoutes = require("./routes/auth.routes");
 const errorHandler = require("./middleware/error.middleware");
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://book-inventory-management-applicati.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use(logger);
