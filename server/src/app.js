@@ -10,7 +10,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://book-inventory-management-applicati.vercel.app",
+      "https://as-publications-admin.vercel.app",
     ],
     credentials: true,
   })
