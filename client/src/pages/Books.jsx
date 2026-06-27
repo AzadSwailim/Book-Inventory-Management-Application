@@ -8,7 +8,7 @@ import { deleteBook, getBooks, sellBook } from "../services/book.services";
 import "./Books.css";
 
 const BOOKS_PER_PAGE = 5;
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const UPLOADS_BASE_URL = `${API_BASE_URL}/uploads`;
 
 const normalizeBooks = (data) => {
