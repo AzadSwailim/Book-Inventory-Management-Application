@@ -1,5 +1,5 @@
 const prisma = require ("../config/prisma");
-const fs = require("fs/promises");
+const supabase = require("../config/supabase");
 
 const getAllBooks = async (search, page, limit, sort, order) => {
     let where = {};
@@ -28,29 +28,63 @@ const getBookById = async (id) => {
     });
 };
 
-const createBook = async (bookData) => {
+const createBook = async (bookData, file) => {
+    if (file) {
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const { error } = await supabase.storage
+            .from("book-covers")
+            .upload(fileName, file.buffer, {
+                contentType: file.mimetype,
+            });
+        if (error) {
+            throw new Error(error.message);
+        }
+        const {
+            data: { publicUrl },
+        } = supabase.storage
+            .from("book-covers")
+            .getPublicUrl(fileName);
+        bookData.coverImage = publicUrl;
+    }
     return await prisma.book.create({
-        data: bookData
+        data: bookData,
     });
 };
 
-const updateBook = async (id, updatedData) =>{
+const updateBook = async (id, updatedData, file) => {
     const book = await prisma.book.findUnique({
         where: {
             id
         }
     });
-    if (!book){
-        return null
-    };
-    if (updatedData.coverImage) {
+    if (!book) {
+        return null;
+    }
+    if (file) {
         if (book.coverImage) {
-            try {
-                await fs.unlink(book.coverImage);
-            } catch (err) {
-                console.log("Image not found:", err.message);
+            const oldFileName = book.coverImage.split("/").pop();
+            const { error: deleteError } = await supabase.storage
+                .from("book-covers")
+                .remove([oldFileName]);
+            if (deleteError) {
+                console.log("Failed to delete old image:", deleteError.message);
             }
         }
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const { error } = await supabase.storage
+            .from("book-covers")
+            .upload(fileName, file.buffer, {
+                contentType: file.mimetype,
+            });
+        if (error) {
+            throw new Error(error.message);
+        }
+        const {
+            data: { publicUrl },
+        } = supabase.storage
+            .from("book-covers")
+            .getPublicUrl(fileName);
+        updatedData.coverImage = publicUrl;
     }
     return await prisma.book.update({
         where: {
@@ -66,18 +100,20 @@ const deleteBook = async (id) => {
             id
         }
     });
-    if (!book){
-        return null
-    };
+    if (!book) {
+        return null;
+    }
     if (book.coverImage) {
-        try {
-            await fs.unlink(book.coverImage);
-        } catch (err) {
-            console.log("Image not found:", err.message);
+        const fileName = book.coverImage.split("/").pop();
+        const { error } = await supabase.storage
+            .from("book-covers")
+            .remove([fileName]);
+        if (error) {
+            console.log("Failed to delete image:", error.message);
         }
     }
     return await prisma.book.delete({
-        where:{
+        where: {
             id
         }
     });
