@@ -3,7 +3,8 @@ const { getAllBooks,
         getBookById, 
         createBook, 
         updateBook, 
-        deleteBook 
+        deleteBook,
+        restockBook 
       } = require("../controllers/book.controller");
 const validateCreate = require("../middleware/validateCreate.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
