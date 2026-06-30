@@ -118,6 +118,12 @@
     background: var(--accent-soft);
 }
 
+.restock-icon:hover {
+    border-color: color-mix(in srgb, var(--gold) 65%, var(--border));
+    color: var(--walnut);
+    background: var(--gold-soft);
+}
+
 .sell-modal {
     width: min(440px, 100%);
     border: 1px solid var(--border);

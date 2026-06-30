@@ -36,6 +36,12 @@ export const sellBook = async (book, quantitySold) => {
     return updateBook(bookId, bookData);
 };
 
+export const restockBook = async (book, quantity) => {
+    const bookId = book.id || book._id;
+    const response = await api.patch(`/books/${bookId}/restock`, { quantity });
+    return response.data;
+};
+
 export const deleteBook = async (id) => {
     const response = await api.delete(`/books/${id}`);
     return response.data;

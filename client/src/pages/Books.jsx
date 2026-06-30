@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { FiEdit2, FiImage, FiPlus, FiShoppingBag, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiImage, FiPackage, FiPlus, FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import ConfirmDialog from "../components/ConfirmDialog";
+import RestockBookModal from "../components/RestockBookModal";
 import SellBookModal from "../components/SellBookModal";
-import { deleteBook, getBooks, sellBook } from "../services/book.services";
+import { deleteBook, getBooks, restockBook, sellBook } from "../services/book.services";
 import "./Books.css";
 
 const BOOKS_PER_PAGE = 5;
@@ -53,7 +54,9 @@ function Books() {
     const [currentPage, setCurrentPage] = useState(1);
     const [bookToDelete, setBookToDelete] = useState(null);
     const [bookToSell, setBookToSell] = useState(null);
+    const [bookToRestock, setBookToRestock] = useState(null);
     const [isSelling, setIsSelling] = useState(false);
+    const [isRestocking, setIsRestocking] = useState(false);
 
     const refreshBooks = async () => {
         const data = await getBooks();
@@ -163,6 +166,26 @@ function Books() {
         }
     };
 
+    const handleRestock = async (quantity) => {
+        if (!bookToRestock) {
+            return false;
+        }
+
+        setIsRestocking(true);
+        try {
+            await restockBook(bookToRestock, quantity);
+            await refreshBooks();
+            setBookToRestock(null);
+            toast.success("Book restocked successfully");
+            return true;
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Unable to restock book");
+            return false;
+        } finally {
+            setIsRestocking(false);
+        }
+    };
+
     return (
         <section className="page-section fade-in">
             <div className="section-heading books-heading">
@@ -268,6 +291,14 @@ function Books() {
                                                 </button>
                                                 <button
                                                     type="button"
+                                                    className="icon-button restock-icon"
+                                                    onClick={() => setBookToRestock(book)}
+                                                    aria-label={`Restock ${book.title}`}
+                                                >
+                                                    <FiPackage />
+                                                </button>
+                                                <button
+                                                    type="button"
                                                     className="icon-button danger-icon"
                                                     onClick={() => setBookToDelete(book)}
                                                     aria-label={`Delete ${book.title}`}
@@ -325,6 +356,14 @@ function Books() {
                 isSubmitting={isSelling}
                 onCancel={() => setBookToSell(null)}
                 onSell={handleSell}
+            />
+
+            <RestockBookModal
+                open={Boolean(bookToRestock)}
+                book={bookToRestock}
+                isSubmitting={isRestocking}
+                onCancel={() => setBookToRestock(null)}
+                onRestock={handleRestock}
             />
         </section>
     );
