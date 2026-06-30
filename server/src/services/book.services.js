@@ -118,11 +118,30 @@ const deleteBook = async (id) => {
         }
     });
 };
+const restockBook = async (id, quantity) => {
+    const book = await prisma.book.findUnique({
+        where: { id },
+    });
+
+    if (!book) {
+        return null;
+    }
+
+    return prisma.book.update({
+        where: { id },
+        data: {
+            stock: {
+                increment: Number(quantity),
+            },
+        },
+    });
+};
 
 module.exports = {
     getAllBooks,
     getBookById,
     createBook,
     updateBook,
-    deleteBook
+    deleteBook,
+    restockBook
 };

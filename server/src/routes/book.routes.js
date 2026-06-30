@@ -16,4 +16,5 @@ router.get("/:id", asyncHandler(getBookById));
 router.post("/", authMiddleware, upload.single("coverImage"), validateCreate, asyncHandler(createBook));
 router.put("/:id", authMiddleware, upload.single("coverImage"), validateUpdate, asyncHandler(updateBook));
 router.delete("/:id", authMiddleware, upload.single("coverImage"), asyncHandler(deleteBook));
+router.patch("/:id/restock", authMiddleware, restockBook);
 module.exports = router;
