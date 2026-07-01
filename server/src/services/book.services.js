@@ -155,22 +155,24 @@ const sellBook = async (id, quantity) => {
         throw new Error("Cannot sell more books than available in stock");
     }
     const previousStock = book.stock;
-    const updatedBook = await prisma.book.update({
-        where: { id },
-        data: {
-            stock: {
-                decrement: quantitySold,
+    return await prisma.$transaction(async (tx) => {
+        const updatedBook = await tx.book.update({
+            where: { id },
+            data: {
+                stock: {
+                    decrement: quantitySold,
+                },
             },
-        },
+        });
+        await logActivity({
+            action: "BOOK_SOLD",
+            bookTitle: updatedBook.title,
+            quantity: quantitySold,
+            previousStock,
+            newStock: updatedBook.stock
+        }, tx);
+        return updatedBook;
     });
-    await logActivity({
-        action: "BOOK_SOLD",
-        bookTitle: updatedBook.title,
-        quantity: quantitySold,
-        previousStock,
-        newStock: updatedBook.stock
-    });
-    return updatedBook;
 };
 
 const restockBook = async (id, quantity) => {
@@ -185,22 +187,24 @@ const restockBook = async (id, quantity) => {
         throw new Error("Quantity added must be a positive whole number");
     }
     const previousStock = book.stock;
-    const updatedBook = await prisma.book.update({
-        where: { id },
-        data: {
-            stock: {
-                increment: quantityAdded,
+    return await prisma.$transaction(async (tx) => {
+        const updatedBook = await tx.book.update({
+            where: { id },
+            data: {
+                stock: {
+                    increment: quantityAdded,
+                },
             },
-        },
+        });
+        await logActivity({
+            action: "BOOK_RESTOCKED",
+            bookTitle: updatedBook.title,
+            quantity: quantityAdded,
+            previousStock,
+            newStock: updatedBook.stock
+        }, tx);
+        return updatedBook;
     });
-    await logActivity({
-        action: "BOOK_RESTOCKED",
-        bookTitle: updatedBook.title,
-        quantity: quantityAdded,
-        previousStock,
-        newStock: updatedBook.stock
-    });
-    return updatedBook;
 };
 
 module.exports = {

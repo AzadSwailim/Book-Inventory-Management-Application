@@ -7,8 +7,8 @@ const logActivity = async ({
     previousStock,
     newStock,
     details
-}) => {
-    return await prisma.activityLog.create({
+}, prismaClient = prisma) => {
+    return await prismaClient.activityLog.create({
         data: {
             action,
             bookTitle,
