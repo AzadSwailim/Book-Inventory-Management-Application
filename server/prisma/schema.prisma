@@ -27,3 +27,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model ActivityLog {
+  id            Int      @id @default(autoincrement())
+  action        String
+  bookTitle     String
+  quantity      Int?
+  previousStock Int?
+  newStock      Int?
+  details       String?
+  createdAt     DateTime @default(now())
+}

@@ -82,6 +82,22 @@ const deleteBook = async (req, res) => {
         message: "Book Successfully Deleted",
     });
 };
+
+const sellBook = async (req, res) => {
+    const id = parseInt(req.params.id);
+    const { quantity } = req.body;
+
+    const updatedBook = await bookService.sellBook(id, quantity);
+
+    if (!updatedBook) {
+        return res.status(404).json({
+            message: "Book Not Found",
+        });
+    }
+
+    return res.json(updatedBook);
+};
+
 const restockBook = async (req, res) => {
     const id = parseInt(req.params.id);
     const { quantity } = req.body;
@@ -103,5 +119,6 @@ module.exports = {
     createBook,
     updateBook,
     deleteBook,
+    sellBook,
     restockBook
 };

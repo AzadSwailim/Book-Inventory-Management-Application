@@ -10,6 +10,7 @@ const pageTitles = {
     "/dashboard": "Dashboard",
     "/books": "Books",
     "/books/add": "Add Book",
+    "/activity": "Activity Log",
     "/settings": "Settings"
 };
 

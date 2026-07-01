@@ -4,6 +4,7 @@ const { getAllBooks,
         createBook, 
         updateBook, 
         deleteBook,
+        sellBook,
         restockBook 
       } = require("../controllers/book.controller");
 const validateCreate = require("../middleware/validateCreate.middleware");
@@ -17,5 +18,6 @@ router.get("/:id", asyncHandler(getBookById));
 router.post("/", authMiddleware, upload.single("coverImage"), validateCreate, asyncHandler(createBook));
 router.put("/:id", authMiddleware, upload.single("coverImage"), validateUpdate, asyncHandler(updateBook));
 router.delete("/:id", authMiddleware, upload.single("coverImage"), asyncHandler(deleteBook));
-router.patch("/:id/restock", authMiddleware, restockBook);
+router.patch("/:id/sell", authMiddleware, asyncHandler(sellBook));
+router.patch("/:id/restock", authMiddleware, asyncHandler(restockBook));
 module.exports = router;

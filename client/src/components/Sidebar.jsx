@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FiBarChart2, FiBookOpen, FiLogOut, FiSettings, FiX } from "react-icons/fi";
+import { FiBarChart2, FiBookOpen, FiClock, FiLogOut, FiSettings, FiX } from "react-icons/fi";
 import logo from "../assets/as-publications-logo.png";
 import "./Sidebar.css";
 
@@ -25,6 +25,10 @@ function Sidebar({ isMobileOpen, onCloseMobile, onLogoutRequest }) {
                     <NavLink to="/books" className="sidebar-link" end onClick={onCloseMobile}>
                         <FiBookOpen />
                         <span>Books</span>
+                    </NavLink>
+                    <NavLink to="/activity" className="sidebar-link" onClick={onCloseMobile}>
+                        <FiClock />
+                        <span>Activity Log</span>
                     </NavLink>
                     <NavLink to="/settings" className="sidebar-link" onClick={onCloseMobile}>
                         <FiSettings />

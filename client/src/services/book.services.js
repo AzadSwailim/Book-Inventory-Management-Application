@@ -26,14 +26,8 @@ export const updateBook = async (id, bookData) => {
 
 export const sellBook = async (book, quantitySold) => {
     const bookId = book.id || book._id;
-    const updatedStock = Number(book.stock) - quantitySold;
-    const bookData = new FormData();
-
-    bookData.append("title", book.title);
-    bookData.append("price", book.price);
-    bookData.append("stock", updatedStock);
-
-    return updateBook(bookId, bookData);
+    const response = await api.patch(`/books/${bookId}/sell`, { quantity: quantitySold });
+    return response.data;
 };
 
 export const restockBook = async (book, quantity) => {

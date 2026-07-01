@@ -1,5 +1,6 @@
 const prisma = require ("../config/prisma");
 const supabase = require("../config/supabase");
+const { logActivity } = require("./activity.service");
 
 const getAllBooks = async (search, page, limit, sort, order) => {
     let where = {};
@@ -46,9 +47,17 @@ const createBook = async (bookData, file) => {
             .getPublicUrl(fileName);
         bookData.coverImage = publicUrl;
     }
-    return await prisma.book.create({
+    const newBook = await prisma.book.create({
         data: bookData,
     });
+    await logActivity({
+        action: "BOOK_CREATED",
+        bookTitle: newBook.title,
+        quantity: newBook.stock,
+        newStock: newBook.stock,
+        details: "Book created"
+    });
+    return newBook;
 };
 
 const updateBook = async (id, updatedData, file) => {
@@ -86,12 +95,18 @@ const updateBook = async (id, updatedData, file) => {
             .getPublicUrl(fileName);
         updatedData.coverImage = publicUrl;
     }
-    return await prisma.book.update({
+    const updatedBook = await prisma.book.update({
         where: {
             id
         },
         data: updatedData
     });
+    await logActivity({
+        action: "BOOK_UPDATED",
+        bookTitle: updatedBook.title,
+        details: "Book information updated"
+    });
+    return updatedBook;
 };
 
 const deleteBook = async (id) => {
@@ -112,29 +127,80 @@ const deleteBook = async (id) => {
             console.log("Failed to delete image:", error.message);
         }
     }
-    return await prisma.book.delete({
+    const deletedBook = await prisma.book.delete({
         where: {
             id
         }
     });
+    await logActivity({
+        action: "BOOK_DELETED",
+        bookTitle: deletedBook.title,
+        details: "Book deleted"
+    });
+    return deletedBook;
 };
+
+const sellBook = async (id, quantity) => {
+    const book = await prisma.book.findUnique({
+        where: { id },
+    });
+    if (!book) {
+        return null;
+    }
+    const quantitySold = Number(quantity);
+    if (!Number.isInteger(quantitySold) || quantitySold <= 0) {
+        throw new Error("Quantity sold must be a positive whole number");
+    }
+    if (quantitySold > book.stock) {
+        throw new Error("Cannot sell more books than available in stock");
+    }
+    const previousStock = book.stock;
+    const updatedBook = await prisma.book.update({
+        where: { id },
+        data: {
+            stock: {
+                decrement: quantitySold,
+            },
+        },
+    });
+    await logActivity({
+        action: "BOOK_SOLD",
+        bookTitle: updatedBook.title,
+        quantity: quantitySold,
+        previousStock,
+        newStock: updatedBook.stock
+    });
+    return updatedBook;
+};
+
 const restockBook = async (id, quantity) => {
     const book = await prisma.book.findUnique({
         where: { id },
     });
-
     if (!book) {
         return null;
     }
-
-    return prisma.book.update({
+    const quantityAdded = Number(quantity);
+    if (!Number.isInteger(quantityAdded) || quantityAdded <= 0) {
+        throw new Error("Quantity added must be a positive whole number");
+    }
+    const previousStock = book.stock;
+    const updatedBook = await prisma.book.update({
         where: { id },
         data: {
             stock: {
-                increment: Number(quantity),
+                increment: quantityAdded,
             },
         },
     });
+    await logActivity({
+        action: "BOOK_RESTOCKED",
+        bookTitle: updatedBook.title,
+        quantity: quantityAdded,
+        previousStock,
+        newStock: updatedBook.stock
+    });
+    return updatedBook;
 };
 
 module.exports = {
@@ -143,5 +209,6 @@ module.exports = {
     createBook,
     updateBook,
     deleteBook,
+    sellBook,
     restockBook
 };

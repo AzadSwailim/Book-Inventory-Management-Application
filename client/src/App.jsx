@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Books from "./pages/Books";
 import AddBook from "./pages/AddBook";
 import EditBook from "./pages/EditBook";
+import ActivityLog from "./pages/ActivityLog";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
@@ -19,6 +20,7 @@ function App() {
           <Route path="books" element={<Books />}/>
           <Route path="books/add" element={<AddBook />}/>
           <Route path="books/edit/:id" element={<EditBook />}/>
+          <Route path="activity" element={<ActivityLog />}/>
           <Route path="settings" element={<Settings />}/>
         </Route>
       </Routes>
