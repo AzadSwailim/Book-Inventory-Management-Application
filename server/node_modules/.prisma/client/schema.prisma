@@ -35,6 +35,10 @@ model ActivityLog {
   quantity      Int?
   previousStock Int?
   newStock      Int?
+  customerName  String?
+  customerPhone String?
+  unitPrice     Float?
+  totalAmount   Float?
   details       String?
   createdAt     DateTime @default(now())
 }

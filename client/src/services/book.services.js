@@ -24,9 +24,9 @@ export const updateBook = async (id, bookData) => {
     return response.data;
 };
 
-export const sellBook = async (book, quantitySold) => {
+export const sellBook = async (book, saleData) => {
     const bookId = book.id || book._id;
-    const response = await api.patch(`/books/${bookId}/sell`, { quantity: quantitySold });
+    const response = await api.patch(`/books/${bookId}/sell`, saleData);
     return response.data;
 };
 

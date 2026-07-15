@@ -85,9 +85,28 @@ const deleteBook = async (req, res) => {
 
 const sellBook = async (req, res) => {
     const id = parseInt(req.params.id);
-    const { quantity } = req.body;
+    const { quantity, customerName, customerPhone } = req.body;
+    const trimmedCustomerName = String(customerName || "").trim();
+    const trimmedCustomerPhone = String(customerPhone || "").trim();
 
-    const updatedBook = await bookService.sellBook(id, quantity);
+    if (!trimmedCustomerName) {
+        return res.status(400).json({
+            message: "Customer name is required",
+        });
+    }
+
+    if (!trimmedCustomerPhone) {
+        return res.status(400).json({
+            message: "Customer phone number is required",
+        });
+    }
+
+    const updatedBook = await bookService.sellBook(
+        id,
+        quantity,
+        trimmedCustomerName,
+        trimmedCustomerPhone
+    );
 
     if (!updatedBook) {
         return res.status(404).json({

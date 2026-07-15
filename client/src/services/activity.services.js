@@ -12,3 +12,8 @@ export const getActivities = async ({ search, action, order, page, limit }) => {
     });
     return response.data;
 };
+
+export const deleteActivity = async (id) => {
+    const response = await api.delete(`/activity/${id}`);
+    return response.data;
+};

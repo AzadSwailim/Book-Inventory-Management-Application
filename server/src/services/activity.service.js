@@ -6,6 +6,10 @@ const logActivity = async ({
     quantity,
     previousStock,
     newStock,
+    customerName,
+    customerPhone,
+    unitPrice,
+    totalAmount,
     details
 }, prismaClient = prisma) => {
     return await prismaClient.activityLog.create({
@@ -15,6 +19,10 @@ const logActivity = async ({
             quantity,
             previousStock,
             newStock,
+            customerName,
+            customerPhone,
+            unitPrice,
+            totalAmount,
             details
         }
     });
@@ -55,7 +63,22 @@ const getActivities = async (search, action, page, limit, order) => {
     };
 };
 
+const deleteActivity = async (id) => {
+    const activity = await prisma.activityLog.findUnique({
+        where: { id }
+    });
+
+    if (!activity) {
+        return null;
+    }
+
+    return prisma.activityLog.delete({
+        where: { id }
+    });
+};
+
 module.exports = {
     logActivity,
-    getActivities
+    getActivities,
+    deleteActivity
 };

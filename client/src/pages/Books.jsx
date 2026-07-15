@@ -148,14 +148,14 @@ function Books() {
         }
     };
 
-    const handleSell = async (quantitySold) => {
+    const handleSell = async (saleData) => {
         if (!bookToSell) {
             return;
         }
 
         setIsSelling(true);
         try {
-            await sellBook(bookToSell, quantitySold);
+            await sellBook(bookToSell, saleData);
             await refreshBooks();
             setBookToSell(null);
             toast.success("Sale recorded successfully");

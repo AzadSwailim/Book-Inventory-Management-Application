@@ -87,6 +87,10 @@
     flex-wrap: wrap;
 }
 
+.activity-delete-button {
+    margin-left: auto;
+}
+
 .activity-badge {
     min-height: 28px;
     border-radius: 999px;
@@ -146,7 +150,7 @@
 .activity-meta {
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 10px;
 }
 

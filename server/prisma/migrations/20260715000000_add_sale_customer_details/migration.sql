@@ -1,0 +1,5 @@
+ALTER TABLE "ActivityLog"
+ADD COLUMN "customerName" TEXT,
+ADD COLUMN "customerPhone" TEXT,
+ADD COLUMN "unitPrice" DOUBLE PRECISION,
+ADD COLUMN "totalAmount" DOUBLE PRECISION;

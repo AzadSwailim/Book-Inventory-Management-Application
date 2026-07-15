@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiClock, FiSearch } from "react-icons/fi";
+import { FiClock, FiSearch, FiTrash2 } from "react-icons/fi";
 import { toast } from "react-hot-toast";
-import { getActivities } from "../services/activity.services";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { deleteActivity, getActivities } from "../services/activity.services";
 import "./ActivityLog.css";
 
 const ACTIVITIES_PER_PAGE = 8;
@@ -28,6 +29,11 @@ const formatTime = (value) => {
         minute: "2-digit"
     });
 };
+
+const formatCurrency = (value) => `₹${Number(value).toLocaleString("en-IN", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+})}`;
 
 const formatRelativeTime = (value) => {
     const activityDate = new Date(value);
@@ -71,6 +77,7 @@ function ActivityLog() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const [activityToDelete, setActivityToDelete] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -105,6 +112,21 @@ function ActivityLog() {
             isMounted = false;
         };
     }, [search, action, order, currentPage]);
+
+    const handleDelete = async () => {
+        if (!activityToDelete) {
+            return;
+        }
+
+        try {
+            await deleteActivity(activityToDelete.id);
+            setActivityToDelete(null);
+            setActivities((currentActivities) => currentActivities.filter((activity) => activity.id !== activityToDelete.id));
+            toast.success("Activity log deleted successfully.");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Unable to delete activity log");
+        }
+    };
 
     const pageNumbers = useMemo(() => {
         return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -189,6 +211,14 @@ function ActivityLog() {
                                         <FiClock />
                                         {formatRelativeTime(activity.createdAt)}
                                     </span>
+                                    <button
+                                        type="button"
+                                        className="icon-button danger-icon activity-delete-button"
+                                        onClick={() => setActivityToDelete(activity)}
+                                        aria-label={`Delete activity log for ${activity.bookTitle}`}
+                                    >
+                                        <FiTrash2 />
+                                    </button>
                                 </div>
 
                                 <div>
@@ -213,6 +243,30 @@ function ActivityLog() {
                                         <div>
                                             <dt>New Stock</dt>
                                             <dd>{activity.newStock}</dd>
+                                        </div>
+                                    )}
+                                    {activity.customerName && (
+                                        <div>
+                                            <dt>Customer</dt>
+                                            <dd>{activity.customerName}</dd>
+                                        </div>
+                                    )}
+                                    {activity.customerPhone && (
+                                        <div>
+                                            <dt>Phone</dt>
+                                            <dd>{activity.customerPhone}</dd>
+                                        </div>
+                                    )}
+                                    {activity.unitPrice !== null && activity.unitPrice !== undefined && (
+                                        <div>
+                                            <dt>Unit Price</dt>
+                                            <dd>{formatCurrency(activity.unitPrice)}</dd>
+                                        </div>
+                                    )}
+                                    {activity.totalAmount !== null && activity.totalAmount !== undefined && (
+                                        <div>
+                                            <dt>Total</dt>
+                                            <dd>{formatCurrency(activity.totalAmount)}</dd>
                                         </div>
                                     )}
                                     <div>
@@ -255,6 +309,16 @@ function ActivityLog() {
                     <p>Inventory changes will appear here after books are created, updated, sold, restocked, or deleted.</p>
                 </div>
             )}
+
+            <ConfirmDialog
+                open={Boolean(activityToDelete)}
+                title="Delete this activity log?"
+                message="Are you sure you want to delete this activity log? This will permanently remove this historical record."
+                confirmText="Delete Log"
+                danger
+                onCancel={() => setActivityToDelete(null)}
+                onConfirm={handleDelete}
+            />
         </section>
     );
 }

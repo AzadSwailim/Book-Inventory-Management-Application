@@ -3,6 +3,8 @@ import { toast } from "react-hot-toast";
 
 function SellBookModal({ open, book, isSubmitting, onCancel, onSell }) {
     const [quantitySold, setQuantitySold] = useState("");
+    const [customerName, setCustomerName] = useState("");
+    const [customerPhone, setCustomerPhone] = useState("");
 
     if (!open || !book) {
         return null;
@@ -12,6 +14,8 @@ function SellBookModal({ open, book, isSubmitting, onCancel, onSell }) {
 
     const handleCancel = () => {
         setQuantitySold("");
+        setCustomerName("");
+        setCustomerPhone("");
         onCancel();
     };
 
@@ -41,8 +45,27 @@ function SellBookModal({ open, book, isSubmitting, onCancel, onSell }) {
             return;
         }
 
-        await onSell(quantity);
+        const trimmedCustomerName = customerName.trim();
+        const trimmedCustomerPhone = customerPhone.trim();
+
+        if (!trimmedCustomerName) {
+            toast.error("Enter customer name.");
+            return;
+        }
+
+        if (!trimmedCustomerPhone) {
+            toast.error("Enter customer phone number.");
+            return;
+        }
+
+        await onSell({
+            quantity,
+            customerName: trimmedCustomerName,
+            customerPhone: trimmedCustomerPhone
+        });
         setQuantitySold("");
+        setCustomerName("");
+        setCustomerPhone("");
     };
 
     return (
@@ -67,6 +90,26 @@ function SellBookModal({ open, book, isSubmitting, onCancel, onSell }) {
                         value={quantitySold}
                         onChange={(event) => setQuantitySold(event.target.value)}
                         autoFocus
+                    />
+                </label>
+
+                <label className="sell-field">
+                    <span>Customer Name</span>
+                    <input
+                        type="text"
+                        value={customerName}
+                        onChange={(event) => setCustomerName(event.target.value)}
+                        required
+                    />
+                </label>
+
+                <label className="sell-field">
+                    <span>Customer Phone Number</span>
+                    <input
+                        type="tel"
+                        value={customerPhone}
+                        onChange={(event) => setCustomerPhone(event.target.value)}
+                        required
                     />
                 </label>
 

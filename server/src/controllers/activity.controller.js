@@ -17,6 +17,22 @@ const getActivities = async (req, res) => {
     return res.json(activities);
 };
 
+const deleteActivity = async (req, res) => {
+    const id = parseInt(req.params.id);
+    const deletedActivity = await activityService.deleteActivity(id);
+
+    if (!deletedActivity) {
+        return res.status(404).json({
+            message: "Activity log not found",
+        });
+    }
+
+    return res.json({
+        message: "Activity log deleted successfully",
+    });
+};
+
 module.exports = {
-    getActivities
+    getActivities,
+    deleteActivity
 };

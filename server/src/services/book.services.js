@@ -2,6 +2,12 @@ const prisma = require ("../config/prisma");
 const supabase = require("../config/supabase");
 const { logActivity } = require("./activity.service");
 
+const validationError = (message) => {
+    const error = new Error(message);
+    error.statusCode = 400;
+    return error;
+};
+
 const getAllBooks = async (search, page, limit, sort, order) => {
     let where = {};
     if (search){
@@ -140,22 +146,27 @@ const deleteBook = async (id) => {
     return deletedBook;
 };
 
-const sellBook = async (id, quantity) => {
-    const book = await prisma.book.findUnique({
-        where: { id },
-    });
-    if (!book) {
-        return null;
-    }
+const sellBook = async (id, quantity, customerName, customerPhone) => {
     const quantitySold = Number(quantity);
     if (!Number.isInteger(quantitySold) || quantitySold <= 0) {
-        throw new Error("Quantity sold must be a positive whole number");
+        throw validationError("Quantity sold must be a positive whole number");
     }
-    if (quantitySold > book.stock) {
-        throw new Error("Cannot sell more books than available in stock");
-    }
-    const previousStock = book.stock;
+
     return await prisma.$transaction(async (tx) => {
+        const book = await tx.book.findUnique({
+            where: { id },
+        });
+
+        if (!book) {
+            return null;
+        }
+
+        if (quantitySold > book.stock) {
+            throw validationError("Cannot sell more books than available in stock");
+        }
+
+        const previousStock = book.stock;
+        const unitPrice = Number(book.price);
         const updatedBook = await tx.book.update({
             where: { id },
             data: {
@@ -169,7 +180,11 @@ const sellBook = async (id, quantity) => {
             bookTitle: updatedBook.title,
             quantity: quantitySold,
             previousStock,
-            newStock: updatedBook.stock
+            newStock: updatedBook.stock,
+            customerName,
+            customerPhone,
+            unitPrice,
+            totalAmount: quantitySold * unitPrice
         }, tx);
         return updatedBook;
     });
@@ -184,7 +199,7 @@ const restockBook = async (id, quantity) => {
     }
     const quantityAdded = Number(quantity);
     if (!Number.isInteger(quantityAdded) || quantityAdded <= 0) {
-        throw new Error("Quantity added must be a positive whole number");
+        throw validationError("Quantity added must be a positive whole number");
     }
     const previousStock = book.stock;
     return await prisma.$transaction(async (tx) => {
